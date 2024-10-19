@@ -1,0 +1,9 @@
+{
+  "name": "vosk",
+  "description": "",
+  "repository": "https://github.com/e154/smart-home-vosk",
+  "plugin": "plugin.so",
+  "libs": [
+    "libvosk.dylib"
+  ]
+}

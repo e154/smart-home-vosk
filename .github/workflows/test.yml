@@ -1,0 +1,220 @@
+name: Testing
+
+on:
+  push:
+    branches:
+      - '*'         # matches every branch that doesn't contain a '/'
+      - '*/*'       # matches every branch containing a single '/'
+      - '**'        # matches every branch
+      - '!master'   # excludes master
+
+env:
+  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+
+jobs:
+  run_tests:
+    name: Run linux test
+    strategy:
+      matrix:
+        go: [ 1.22 ]
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install Go ${{ matrix.go }}
+        uses: actions/setup-go@v2
+        with:
+          go-version: ${{ matrix.go }}
+
+      - name: Prepary deps
+        run: |
+          echo -e "machine github.com\n  login ${{ secrets.GITHUBTOKEN }}" > ~/.netrc
+          make get_deps
+
+      - name: Unit tests
+        id: test-code
+        run: make test
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+  build_linux_x86:
+    name: Build linux x86
+    strategy:
+      matrix:
+        go: [ 1.22 ]
+    runs-on: [self-hosted, Linux, X64]
+    steps:
+
+      - env:
+          OUTPUT1: ${{needs.build_public.outputs.output1}}
+        run: echo "Artifact ID from previous job is $OUTPUT1"
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Go mod tidy
+        run: |
+          echo -e "machine github.com\n  login ${{ secrets.GITHUBTOKEN }}" > ~/.netrc
+          make get_deps
+
+      - name: trying to build
+        id: build-linux-x86
+        run: make build_linux_x86
+
+      - uses: actions/upload-artifact@v4
+        id: artifact-upload-step
+        with:
+          name: linux_x86
+          path: ./server-linux-x86
+
+      - name: Output artifact ID
+        run: echo 'Artifact ID is ${{ steps.artifact-upload-step.outputs.artifact-id }}'
+
+  build_linux_amd64:
+    name: Build linux amd64
+    strategy:
+      matrix:
+        go: [ 1.22 ]
+    runs-on: [self-hosted, Linux, X64]
+    needs: [build_public, build_common]
+    steps:
+
+      - env:
+          OUTPUT1: ${{needs.build_public.outputs.output1}}
+        run: echo "Artifact ID from previous job is $OUTPUT1"
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Go mod tidy
+        run: |
+          echo -e "machine github.com\n  login ${{ secrets.GITHUBTOKEN }}" > ~/.netrc
+          make get_deps
+
+      - name: trying to build
+        id: build-linux-amd64
+        run: make build_linux_amd64
+
+      - uses: actions/upload-artifact@v4
+        id: artifact-upload-step
+        with:
+          name: linux_amd64
+          path: ./server-linux-amd64
+
+      - name: Output artifact ID
+        run: echo 'Artifact ID is ${{ steps.artifact-upload-step.outputs.artifact-id }}'
+
+  build_linux_arm6:
+    name: Build linux arm6
+    strategy:
+      matrix:
+        go: [ 1.22 ]
+    runs-on: [self-hosted, Linux, X64]
+    needs: [build_public, build_common]
+    steps:
+
+      - env:
+          OUTPUT1: ${{needs.build_public.outputs.output1}}
+        run: echo "Artifact ID from previous job is $OUTPUT1"
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Go mod tidy
+        run: |
+          echo -e "machine github.com\n  login ${{ secrets.GITHUBTOKEN }}" > ~/.netrc
+          make get_deps
+
+      - name: trying to build
+        id: build-linux-arm-6
+        run: make build_linux_armv6
+
+      - uses: actions/upload-artifact@v4
+        id: artifact-upload-step
+        with:
+          name: linux_arm6
+          path: ./server-linux-arm-6
+
+      - name: Output artifact ID
+        run: echo 'Artifact ID is ${{ steps.artifact-upload-step.outputs.artifact-id }}'
+
+  build_linux_arm7:
+    name: Build linux arm7
+    strategy:
+      matrix:
+        go: [ 1.22 ]
+    runs-on: [self-hosted, Linux, X64]
+    needs: [build_public, build_common]
+    steps:
+
+      - env:
+          OUTPUT1: ${{needs.build_public.outputs.output1}}
+        run: echo "Artifact ID from previous job is $OUTPUT1"
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Go mod tidy
+        run: |
+          echo -e "machine github.com\n  login ${{ secrets.GITHUBTOKEN }}" > ~/.netrc
+          make get_deps
+
+      - name: trying to build
+        id: build-linux-armv7l
+        run: make build_linux_armv7l
+
+      - uses: actions/upload-artifact@v4
+        id: artifact-upload-step
+        with:
+          name: linux_arm7
+          path: ./server-linux-arm-7
+
+      - name: Output artifact ID
+        run: echo 'Artifact ID is ${{ steps.artifact-upload-step.outputs.artifact-id }}'
+
+      - name: trying to build docker image
+        run: make docker_image_linux_armv7l
+
+  build_linux_arm64:
+    name: Build linux arm64
+    strategy:
+      matrix:
+        go: [ 1.22 ]
+    runs-on: [self-hosted, Linux, X64]
+    needs: [build_public, build_common]
+    steps:
+
+      - env:
+          OUTPUT1: ${{needs.build_public.outputs.output1}}
+        run: echo "Artifact ID from previous job is $OUTPUT1"
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Go mod tidy
+        run: |
+          echo -e "machine github.com\n  login ${{ secrets.GITHUBTOKEN }}" > ~/.netrc
+          make get_deps
+
+      - name: trying to build
+        id: build-linux-arm64
+        run: make build_linux_arm64
+
+      - uses: actions/upload-artifact@v4
+        id: artifact-upload-step
+        with:
+          name: linux_arm64
+          path: ./server-linux-arm64
+
+      - name: Output artifact ID
+        run: echo 'Artifact ID is ${{ steps.artifact-upload-step.outputs.artifact-id }}'
+
+      - name: trying to build docker image
+        run: make docker_image_linux_arm64
+
