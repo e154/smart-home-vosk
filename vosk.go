@@ -36,8 +36,8 @@ import (
 	vosk "github.com/alphacep/vosk-api/go"
 	"go.uber.org/atomic"
 
-	"github.com/e154/smart-home/common"
-	"github.com/e154/smart-home/common/web"
+	"github.com/e154/smart-home/pkg/common"
+	"github.com/e154/smart-home/pkg/web"
 )
 
 type Vosk struct {
@@ -180,7 +180,7 @@ func (v *Vosk) runTest() error {
 
 	log.Info("Running recognizer test")
 
-	sttTestPath := filepath.Join("data", "vosk", "stttest.pcm")
+	sttTestPath := filepath.Join("data", "plugins", "vosk", "stttest.pcm")
 	pcmBytes, err := os.ReadFile(sttTestPath)
 	if err != nil {
 		return err

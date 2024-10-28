@@ -25,10 +25,10 @@ import (
 
 	"github.com/e154/bus"
 
-	triggersTypes "github.com/e154/smart-home/plugins/triggers/types"
+	"github.com/e154/smart-home/pkg/plugins/triggers"
 )
 
-var _ triggersTypes.ITrigger = (*Trigger)(nil)
+var _ triggers.ITrigger = (*Trigger)(nil)
 
 type Trigger struct {
 	functionName string
@@ -63,12 +63,12 @@ func (t *Trigger) AsyncAttach(wg *sync.WaitGroup) {
 }
 
 // Subscribe ...
-func (t *Trigger) Subscribe(options triggersTypes.Subscriber) error {
+func (t *Trigger) Subscribe(options triggers.Subscriber) error {
 	return t.msgQueue.Subscribe("/", options.Handler)
 }
 
 // Unsubscribe ...
-func (t *Trigger) Unsubscribe(options triggersTypes.Subscriber) error {
+func (t *Trigger) Unsubscribe(options triggers.Subscriber) error {
 	return t.msgQueue.Unsubscribe("/", options.Handler)
 }
 

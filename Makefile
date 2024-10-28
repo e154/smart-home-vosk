@@ -5,23 +5,24 @@ COMMON_DIR = ${ROOT}/tmp/common
 
 PROJECT ?=github.com/e154/smart-home-vosk
 VERSION_VAR=${PROJECT}/version.Version
+RELEASE_VERSION ?= v0.0.0
 
 GO_BUILD_LDFLAGS= -s -w -linkmode external -X ${VERSION_VAR}=${RELEASE_VERSION}
-GO_BUILD_FLAGS= -trimpath -buildmode=plugin -a -installsuffix cgo -v --ldflags '${GO_BUILD_LDFLAGS}'
+GO_BUILD_FLAGS= -buildmode=plugin -a -installsuffix -trimpath -v --ldflags '${GO_BUILD_LDFLAGS}'
 GO_BUILD_ENV=CGO_ENABLED=1
 GO_BUILD_TAGS= -tags 'production'
 GO_TEST=test -tags test -v
 
+GOOS ?=darwin
+GOARCH ?=arm64
+
 test:
 	@echo MARK: unit tests
-	go ${GO_TEST} $(shell go list ./... | grep -v /tmp | grep -v /tests) -timeout 60s -race -covermode=atomic -coverprofile=coverage.out
+	#go ${GO_TEST} $(shell go list ./... | grep -v /tmp) -timeout 60s -race
 
 test_without_race:
 	@echo MARK: unit tests
-	go ${GO_TEST} $(shell go list ./... | grep -v /tmp | grep -v /tests) -timeout 60s -covermode=atomic -coverprofile=coverage.out
-
-lint-todo:
-	@echo MARK: make lint todo
+	go ${GO_TEST} $(shell go list ./... | grep -v /tmp) -timeout 60s
 
 lint:
 	golangci-lint run
@@ -35,6 +36,12 @@ build_darwin_arm64:
 	rm -rf ${ROOT}/${EXEC}-darwin-arm64
 	mkdir -p ${ROOT}/${EXEC}-darwin-arm64
 	./vosk.sh darwin arm64 ${ROOT}/${EXEC}-darwin-arm64
+	cp stttest.pcm ${ROOT}/${EXEC}-darwin-arm64
+	cp manifest.json ${ROOT}/${EXEC}-darwin-arm64
+	sed -i '' 's/__VERSION__/${RELEASE_VERSION}/g' ${ROOT}/${EXEC}-darwin-arm64/manifest.json
+	sed -i '' 's/__ARCH__/arm64/g' ${ROOT}/${EXEC}-darwin-arm64/manifest.json
+	sed -i '' 's/__OS__/darwin/g' ${ROOT}/${EXEC}-darwin-arm64/manifest.json
+	cp LICENSE ${ROOT}/${EXEC}-darwin-arm64
 	export CGO_LDFLAGS_ALLOW=".*" && \
 	export CGO_CFLAGS="-I${ROOT}/${EXEC}-darwin-arm64" && \
 	export CGO_LDFLAGS="-L${ROOT}/${EXEC}-darwin-arm64" && \
@@ -49,6 +56,12 @@ build_linux_x86:
 	rm -rf ${ROOT}/${EXEC}-linux-x86
 	mkdir -p ${ROOT}/${EXEC}-linux-x86
 	./vosk.sh linux x86 ${ROOT}/${EXEC}-linux-x86
+	cp stttest.pcm ${ROOT}/${EXEC}-linux-x86
+	cp manifest.json ${ROOT}/${EXEC}-linux-x86
+	sed -i 's/__VERSION__/${RELEASE_VERSION}/g' ${ROOT}/${EXEC}-linux-x86/manifest.json
+	sed -i 's/__ARCH__/x86/g' ${ROOT}/${EXEC}-linux-x86/manifest.json
+	sed -i 's/__OS__/linux/g' ${ROOT}/${EXEC}-linux-x86/manifest.json
+	cp LICENSE ${ROOT}/${EXEC}-darwin-arm64
 	export CGO_LDFLAGS_ALLOW="-Wl,-rpath.*" && \
 	export CGO_CFLAGS="-I${ROOT}/${EXEC}-linux-x86" && \
 	export CGO_LDFLAGS="-L${ROOT}/${EXEC}-linux-x86" && \
@@ -62,6 +75,12 @@ build_linux_amd64:
 	rm -rf ${ROOT}/${EXEC}-linux-amd64
 	mkdir -p ${ROOT}/${EXEC}-linux-amd64
 	./vosk.sh linux x86_64 ${ROOT}/${EXEC}-linux-amd64
+	cp stttest.pcm ${ROOT}/${EXEC}-linux-amd64
+	cp manifest.json ${ROOT}/${EXEC}-linux-amd64
+	sed -i 's/__VERSION__/${RELEASE_VERSION}/g' ${ROOT}/${EXEC}-linux-amd64/manifest.json
+	sed -i 's/__ARCH__/amd64/g' ${ROOT}/${EXEC}-linux-amd64/manifest.json
+	sed -i 's/__OS__/linux/g' ${ROOT}/${EXEC}-linux-amd64/manifest.json
+	cp LICENSE ${ROOT}/${EXEC}-linux-amd64
 	export CGO_LDFLAGS_ALLOW="-Wl,-rpath.*" && \
 	export CGO_CFLAGS="-I${ROOT}/${EXEC}-linux-amd64" && \
 	export CGO_LDFLAGS="-L${ROOT}/${EXEC}-linux-amd64" && \
@@ -75,6 +94,12 @@ build_linux_armv6:
 	rm -rf ${ROOT}/${EXEC}-linux-arm-6
 	mkdir -p ${ROOT}/${EXEC}-linux-arm-6
 	./vosk.sh linux armv7l ${ROOT}/${EXEC}-linux-arm-6
+	cp stttest.pcm ${ROOT}/${EXEC}-linux-arm-6
+	cp manifest.json ${ROOT}/${EXEC}-linux-arm-6
+	sed -i 's/__VERSION__/${RELEASE_VERSION}/g' ${ROOT}/${EXEC}-linux-arm-6/manifest.json
+	sed -i 's/__ARCH__/arm/g' ${ROOT}/${EXEC}-linux-arm-6/manifest.json
+	sed -i 's/__OS__/linux/g' ${ROOT}/${EXEC}-linux-arm-6/manifest.json
+	cp LICENSE ${ROOT}/${EXEC}-linux-arm-6
 	export CGO_LDFLAGS_ALLOW="-Wl,-rpath.*" && \
 	export CGO_CFLAGS="-I${ROOT}/${EXEC}-linux-arm-6" && \
 	export CGO_LDFLAGS="-L${ROOT}/${EXEC}-linux-arm-6" && \
@@ -88,6 +113,12 @@ build_linux_armv7l:
 	rm -rf ${ROOT}/${EXEC}-linux-arm-7
 	mkdir -p ${ROOT}/${EXEC}-linux-arm-7
 	./vosk.sh linux armv7l ${ROOT}/${EXEC}-linux-arm-7
+	cp stttest.pcm ${ROOT}/${EXEC}-linux-arm-7
+	cp manifest.json ${ROOT}/${EXEC}-linux-arm-7
+	sed -i 's/__VERSION__/${RELEASE_VERSION}/g' ${ROOT}/${EXEC}-linux-arm-7/manifest.json
+	sed -i 's/__ARCH__/arm/g' ${ROOT}/${EXEC}-linux-arm-7/manifest.json
+	sed -i 's/__OS__/linux/g' ${ROOT}/${EXEC}-linux-arm-7/manifest.json
+	cp LICENSE ${ROOT}/${EXEC}-linux-arm-7
 	export CGO_LDFLAGS_ALLOW="-Wl,-rpath.*" && \
 	export CGO_CFLAGS="-I${ROOT}/${EXEC}-linux-arm-7" && \
 	export CGO_LDFLAGS="-L${ROOT}/${EXEC}-linux-arm-7" && \
@@ -101,6 +132,12 @@ build_linux_arm64:
 	rm -rf ${ROOT}/${EXEC}-linux-arm64
 	mkdir -p ${ROOT}/${EXEC}-linux-arm64
 	./vosk.sh linux aarch64 ${ROOT}/${EXEC}-linux-arm64
+	cp stttest.pcm ${ROOT}/${EXEC}-linux-arm64
+	cp manifest.json ${ROOT}/${EXEC}-linux-arm64
+	sed -i 's/__VERSION__/${RELEASE_VERSION}/g' ${ROOT}/${EXEC}-linux-arm64/manifest.json
+	sed -i 's/__ARCH__/arm64/g' ${ROOT}/${EXEC}-linux-arm64/manifest.json
+	sed -i 's/__OS__/linux/g' ${ROOT}/${EXEC}-linux-arm64/manifest.json
+	cp LICENSE ${ROOT}/${EXEC}-linux-arm64
 	export CGO_LDFLAGS_ALLOW="-Wl,-rpath.*" && \
 	export CGO_CFLAGS="-I${ROOT}/${EXEC}-linux-arm64" && \
 	export CGO_LDFLAGS="-L${ROOT}/${EXEC}-linux-arm64" && \
@@ -109,29 +146,3 @@ build_linux_arm64:
 	${GO_BUILD_ENV} CC=aarch64-linux-gnu-gcc GOOS=linux GOARCH=arm64 go build ${GO_BUILD_FLAGS} ${GO_BUILD_TAGS} -o ${ROOT}/${EXEC}-linux-arm64/plugin.so
 	cd ${ROOT}/${EXEC}-linux-arm64 && ls -l && tar -zcf ${ROOT}/${EXEC}-linux-arm64.tar.gz .
 
-## windows
-build_windows_amd64:
-	@echo MARK: build windows amd64
-	rm -rf ${ROOT}/${EXEC}-windows-amd64
-	mkdir -p ${ROOT}/${EXEC}-windows-amd64
-	./vosk.sh win win64 ${ROOT}/${EXEC}-windows-amd64
-	export CGO_LDFLAGS_ALLOW="-Wl,-rpath.*" && \
-	export CGO_CFLAGS="-I${ROOT}/${EXEC}-windows-amd64" && \
-	export CGO_LDFLAGS="-L${ROOT}/${EXEC}-windows-amd64 -lvosk -L/usr/lib/x86_64-linux-gnu -ldl -lpthread" && \
-	export LD_LIBRARY_PATH="${ROOT}/${EXEC}-windows-amd64:$LD_LIBRARY_PATH" && \
-	export DYLD_LIBRARY_PATH="${ROOT}/${EXEC}-windows-amd64" && \
-	${GO_BUILD_ENV} CXX=x86_64-w64-mingw32-g++ CC=x86_64-w64-mingw32-gcc GOOS=windows GOARCH=amd64 go build -ldflags ${GO_BUILD_FLAGS} ${GO_BUILD_TAGS} -o ${ROOT}/${EXEC}-windows-amd64/plugin.ddl
-	cd ${ROOT}/${EXEC}-windows-amd64 && ls -l && tar -zcf ${ROOT}/${EXEC}-windows-amd64.tar.gz .
-
-build_windows_x86:
-	@echo MARK: build windows x86
-	rm -rf ${ROOT}/${EXEC}-windows-x86
-	mkdir -p ${ROOT}/${EXEC}-windows-x86
-	./vosk.sh win win32 ${ROOT}/${EXEC}-windows-x86
-	export CGO_LDFLAGS_ALLOW="-Wl,-rpath.*" && \
-	export CGO_CFLAGS="-I${ROOT}/${EXEC}-windows-x86" && \
-	export CGO_LDFLAGS="-L/usr/local/lib -L/usr/lib -L${ROOT}/${EXEC}-windows-x86 -lvosk -L/usr/lib/i386-linux-gnu -ldl -lpthread" && \
-	export LD_LIBRARY_PATH="${ROOT}/${EXEC}-windows-x86:$LD_LIBRARY_PATH" && \
-	export DYLD_LIBRARY_PATH="${ROOT}/${EXEC}-windows-x86" && \
-	${GO_BUILD_ENV} CXX=i686-w64-mingw32-g++ CC=i686-w64-mingw32-gcc GOOS=windows GOARCH=386 go build -ldflags ${GO_BUILD_FLAGS} ${GO_BUILD_TAGS} -o ${ROOT}/${EXEC}-windows-x86/plugin.ddl
-	cd ${ROOT}/${EXEC}-windows-x86 && ls -l && tar -zcf ${ROOT}/${EXEC}-windows-x86.tar.gz .

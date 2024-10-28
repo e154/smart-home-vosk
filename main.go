@@ -25,12 +25,11 @@ import (
 	"github.com/e154/bus"
 
 	"github.com/e154/smart-home-vosk/version"
-	"github.com/e154/smart-home/common/events"
-	"github.com/e154/smart-home/common/logger"
-	m "github.com/e154/smart-home/models"
-	"github.com/e154/smart-home/plugins/triggers"
-	triggersTypes "github.com/e154/smart-home/plugins/triggers/types"
-	"github.com/e154/smart-home/system/supervisor"
+	"github.com/e154/smart-home/pkg/events"
+	"github.com/e154/smart-home/pkg/logger"
+	m "github.com/e154/smart-home/pkg/models"
+	"github.com/e154/smart-home/pkg/plugins"
+	triggersTypes "github.com/e154/smart-home/pkg/plugins/triggers"
 )
 
 var (
@@ -40,8 +39,11 @@ var (
 //go:embed *.md
 var F embed.FS
 
-type plugin struct {
-	*supervisor.Plugin
+var _ plugins.Pluggable = (*Plugin)(nil)
+var _ plugins.Installable = (*Plugin)(nil)
+
+type Plugin struct {
+	*plugins.Plugin
 	registrar triggersTypes.IRegistrar
 	trigger   *Trigger
 	stt       STT
@@ -50,9 +52,9 @@ type plugin struct {
 }
 
 // New ...
-func New() supervisor.Pluggable {
-	p := &plugin{
-		Plugin:   supervisor.NewPlugin(),
+func New() plugins.Pluggable {
+	p := &Plugin{
+		Plugin:   plugins.NewPlugin(),
 		msgQueue: bus.NewBus(),
 	}
 	p.F = F
@@ -60,7 +62,7 @@ func New() supervisor.Pluggable {
 }
 
 // Load ...
-func (p *plugin) Load(ctx context.Context, service supervisor.Service) (err error) {
+func (p *Plugin) Load(ctx context.Context, service plugins.Service) (err error) {
 	if err = p.Plugin.Load(ctx, service, p.ActorConstructor); err != nil {
 		return
 	}
@@ -73,7 +75,7 @@ func (p *plugin) Load(ctx context.Context, service supervisor.Service) (err erro
 	}
 
 	// register trigger
-	if triggersPlugin, ok := service.Plugins()[triggers.Name]; ok {
+	if triggersPlugin, ok := service.Plugins()["triggers"]; ok {
 		if p.registrar, ok = triggersPlugin.(triggersTypes.IRegistrar); ok {
 			p.trigger = NewTrigger(p.msgQueue)
 			if err = p.registrar.RegisterTrigger(p.trigger); err != nil {
@@ -96,7 +98,7 @@ func (p *plugin) Load(ctx context.Context, service supervisor.Service) (err erro
 }
 
 // Unload ...
-func (p *plugin) Unload(ctx context.Context) (err error) {
+func (p *Plugin) Unload(ctx context.Context) (err error) {
 	_ = p.Service.EventBus().Unsubscribe("system/stt", p.eventHandler)
 	err = p.Plugin.Unload(ctx)
 
@@ -113,16 +115,16 @@ func (p *plugin) Unload(ctx context.Context) (err error) {
 }
 
 // ActorConstructor ...
-func (p *plugin) ActorConstructor(entity *m.Entity) (actor supervisor.PluginActor, err error) {
+func (p *Plugin) ActorConstructor(entity *m.Entity) (actor plugins.PluginActor, err error) {
 	return
 }
 
 // Name ...
-func (p *plugin) Name() string {
+func (p *Plugin) Name() string {
 	return Name
 }
 
-func (p *plugin) eventHandler(topic string, msg interface{}) {
+func (p *Plugin) eventHandler(topic string, msg interface{}) {
 
 	switch v := msg.(type) {
 	case events.CommandSTT:
@@ -135,23 +137,18 @@ func (p *plugin) eventHandler(topic string, msg interface{}) {
 	}
 }
 
-// Type ...
-func (p *plugin) Type() supervisor.PluginType {
-	return supervisor.PluginInstallable
-}
-
 // Depends ...
-func (p *plugin) Depends() []string {
+func (p *Plugin) Depends() []string {
 	return nil
 }
 
 // Version ...
-func (p *plugin) Version() string {
+func (p *Plugin) Version() string {
 	return version.Version
 }
 
 // Options ...
-func (p *plugin) Options() m.PluginOptions {
+func (p *Plugin) Options() m.PluginOptions {
 	return m.PluginOptions{
 		Triggers: true,
 		Setts:    NewSettings(),
@@ -161,4 +158,14 @@ func (p *plugin) Options() m.PluginOptions {
 		},
 		TriggerParams: NewTriggerParams(),
 	}
+}
+
+func (p *Plugin) Install() error {
+	log.Debug("Install ...")
+	return nil
+}
+
+func (p *Plugin) Uninstall() error {
+	log.Debug("Uninstall ...")
+	return nil
 }

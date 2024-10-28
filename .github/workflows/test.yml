@@ -8,21 +8,17 @@ on:
       - '**'        # matches every branch
       - '!master'   # excludes master
 
-env:
-  DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-  DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-
 jobs:
   run_tests:
     name: Run linux test
     strategy:
       matrix:
-        go: [ 1.22 ]
+        go: [ 1.23 ]
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Install Go ${{ matrix.go }}
         uses: actions/setup-go@v2
@@ -38,16 +34,11 @@ jobs:
         id: test-code
         run: make test
 
-      - name: Upload coverage reports to Codecov
-        uses: codecov/codecov-action@v3
-        env:
-          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
-
   build_linux_x86:
     name: Build linux x86
     strategy:
       matrix:
-        go: [ 1.22 ]
+        go: [ 1.23 ]
     runs-on: [self-hosted, Linux, X64]
     steps:
 
@@ -56,7 +47,7 @@ jobs:
         run: echo "Artifact ID from previous job is $OUTPUT1"
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Go mod tidy
         run: |
@@ -80,9 +71,8 @@ jobs:
     name: Build linux amd64
     strategy:
       matrix:
-        go: [ 1.22 ]
+        go: [ 1.23 ]
     runs-on: [self-hosted, Linux, X64]
-    needs: [build_public, build_common]
     steps:
 
       - env:
@@ -90,7 +80,7 @@ jobs:
         run: echo "Artifact ID from previous job is $OUTPUT1"
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Go mod tidy
         run: |
@@ -114,9 +104,8 @@ jobs:
     name: Build linux arm6
     strategy:
       matrix:
-        go: [ 1.22 ]
+        go: [ 1.23 ]
     runs-on: [self-hosted, Linux, X64]
-    needs: [build_public, build_common]
     steps:
 
       - env:
@@ -124,7 +113,7 @@ jobs:
         run: echo "Artifact ID from previous job is $OUTPUT1"
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Go mod tidy
         run: |
@@ -148,9 +137,8 @@ jobs:
     name: Build linux arm7
     strategy:
       matrix:
-        go: [ 1.22 ]
+        go: [ 1.23 ]
     runs-on: [self-hosted, Linux, X64]
-    needs: [build_public, build_common]
     steps:
 
       - env:
@@ -158,7 +146,7 @@ jobs:
         run: echo "Artifact ID from previous job is $OUTPUT1"
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Go mod tidy
         run: |
@@ -178,16 +166,12 @@ jobs:
       - name: Output artifact ID
         run: echo 'Artifact ID is ${{ steps.artifact-upload-step.outputs.artifact-id }}'
 
-      - name: trying to build docker image
-        run: make docker_image_linux_armv7l
-
   build_linux_arm64:
     name: Build linux arm64
     strategy:
       matrix:
-        go: [ 1.22 ]
+        go: [ 1.23 ]
     runs-on: [self-hosted, Linux, X64]
-    needs: [build_public, build_common]
     steps:
 
       - env:
@@ -195,7 +179,7 @@ jobs:
         run: echo "Artifact ID from previous job is $OUTPUT1"
 
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Go mod tidy
         run: |
@@ -214,7 +198,4 @@ jobs:
 
       - name: Output artifact ID
         run: echo 'Artifact ID is ${{ steps.artifact-upload-step.outputs.artifact-id }}'
-
-      - name: trying to build docker image
-        run: make docker_image_linux_arm64
 

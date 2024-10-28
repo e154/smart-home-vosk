@@ -1,9 +1,18 @@
 {
   "name": "vosk",
-  "description": "",
+  "version": "__VERSION__",
+  "description": "vosk library integration",
   "repository": "https://github.com/e154/smart-home-vosk",
+  "settings": {"model": "vosk-model-small-en-us-0.15"},
   "plugin": "plugin.so",
+  "arch": "__ARCH__",
+  "os": "__OS__",
+  "actor": false,
+  "triggers": true,
   "libs": [
     "libvosk.dylib"
+  ],
+  "assets": [
+    "stttest.pcm"
   ]
 }

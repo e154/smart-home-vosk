@@ -22,8 +22,8 @@ import (
 	"io"
 	"path"
 
-	"github.com/e154/smart-home/common"
-	m "github.com/e154/smart-home/models"
+	"github.com/e154/smart-home/pkg/common"
+	m "github.com/e154/smart-home/pkg/models"
 )
 
 const (
@@ -36,7 +36,7 @@ const (
 )
 
 var (
-	modelPath = path.Join("data", "vosk", "models")
+	modelPath = path.Join("data", "plugins", "vosk", "models")
 )
 
 // NewSettings ...
