@@ -38,10 +38,10 @@ jobs:
         id: build-linux-x86
         run: make build_linux_x86
 
-      - name: upload server linux x86
+      - name: upload vosk linux x86
         uses: softprops/action-gh-release@v1
         with:
-          files: ./server-linux-x86.tar.gz
+          files: ./vosk-linux-x86.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -73,10 +73,10 @@ jobs:
         id: build-linux-amd64
         run: make build_linux_amd64
 
-      - name: upload server linux amd64
+      - name: upload vosk linux amd64
         uses: softprops/action-gh-release@v1
         with:
-          files: ./server-linux-amd64.tar.gz
+          files: ./vosk-linux-amd64.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -104,10 +104,10 @@ jobs:
         id: build-linux-arm-6
         run: make build_linux_armv6
 
-      - name: upload server linux armv6
+      - name: upload vosk linux armv6
         uses: softprops/action-gh-release@v1
         with:
-          files: ./server-linux-arm-6.tar.gz
+          files: ./vosk-linux-arm-6.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -139,10 +139,10 @@ jobs:
         id: build-linux-armv7l
         run: make build_linux_armv7l
 
-      - name: upload server linux armv7
+      - name: upload vosk linux armv7
         uses: softprops/action-gh-release@v1
         with:
-          files: ./server-linux-arm-7.tar.gz
+          files: ./vosk-linux-arm-7.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -174,9 +174,9 @@ jobs:
         id: build-linux-arm64
         run: make build_linux_arm64
 
-      - name: upload server linux arm64
+      - name: upload vosk linux arm64
         uses: softprops/action-gh-release@v1
         with:
-          files: ./server-linux-arm64.tar.gz
+          files: ./vosk-linux-arm64.tar.gz
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
