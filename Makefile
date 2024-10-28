@@ -41,6 +41,7 @@ build_darwin_arm64:
 	sed -i '' 's/__VERSION__/${RELEASE_VERSION}/g' ${ROOT}/${EXEC}-darwin-arm64/manifest.json
 	sed -i '' 's/__ARCH__/arm64/g' ${ROOT}/${EXEC}-darwin-arm64/manifest.json
 	sed -i '' 's/__OS__/darwin/g' ${ROOT}/${EXEC}-darwin-arm64/manifest.json
+	sed -i '' 's/__LIB__/libvosk.dylib/g' ${ROOT}/${EXEC}-darwin-arm64/manifest.json
 	cp LICENSE ${ROOT}/${EXEC}-darwin-arm64
 	export CGO_LDFLAGS_ALLOW=".*" && \
 	export CGO_CFLAGS="-I${ROOT}/${EXEC}-darwin-arm64" && \
@@ -61,6 +62,7 @@ build_linux_x86:
 	sed -i 's/__VERSION__/${RELEASE_VERSION}/g' ${ROOT}/${EXEC}-linux-x86/manifest.json
 	sed -i 's/__ARCH__/x86/g' ${ROOT}/${EXEC}-linux-x86/manifest.json
 	sed -i 's/__OS__/linux/g' ${ROOT}/${EXEC}-linux-x86/manifest.json
+	sed -i 's/__LIB__/libvosk.so/g' ${ROOT}/${EXEC}-linux-x86/manifest.json
 	cp LICENSE ${ROOT}/${EXEC}-darwin-arm64
 	export CGO_LDFLAGS_ALLOW="-Wl,-rpath.*" && \
 	export CGO_CFLAGS="-I${ROOT}/${EXEC}-linux-x86" && \
@@ -80,6 +82,7 @@ build_linux_amd64:
 	sed -i 's/__VERSION__/${RELEASE_VERSION}/g' ${ROOT}/${EXEC}-linux-amd64/manifest.json
 	sed -i 's/__ARCH__/amd64/g' ${ROOT}/${EXEC}-linux-amd64/manifest.json
 	sed -i 's/__OS__/linux/g' ${ROOT}/${EXEC}-linux-amd64/manifest.json
+	sed -i 's/__LIB__/libvosk.so/g' ${ROOT}/${EXEC}-linux-amd64/manifest.json
 	cp LICENSE ${ROOT}/${EXEC}-linux-amd64
 	export CGO_LDFLAGS_ALLOW="-Wl,-rpath.*" && \
 	export CGO_CFLAGS="-I${ROOT}/${EXEC}-linux-amd64" && \
@@ -99,6 +102,7 @@ build_linux_armv6:
 	sed -i 's/__VERSION__/${RELEASE_VERSION}/g' ${ROOT}/${EXEC}-linux-arm-6/manifest.json
 	sed -i 's/__ARCH__/arm/g' ${ROOT}/${EXEC}-linux-arm-6/manifest.json
 	sed -i 's/__OS__/linux/g' ${ROOT}/${EXEC}-linux-arm-6/manifest.json
+	sed -i 's/__LIB__/libvosk.so/g' ${ROOT}/${EXEC}-linux-arm-6/manifest.json
 	cp LICENSE ${ROOT}/${EXEC}-linux-arm-6
 	export CGO_LDFLAGS_ALLOW="-Wl,-rpath.*" && \
 	export CGO_CFLAGS="-I${ROOT}/${EXEC}-linux-arm-6" && \
@@ -118,6 +122,7 @@ build_linux_armv7l:
 	sed -i 's/__VERSION__/${RELEASE_VERSION}/g' ${ROOT}/${EXEC}-linux-arm-7/manifest.json
 	sed -i 's/__ARCH__/arm/g' ${ROOT}/${EXEC}-linux-arm-7/manifest.json
 	sed -i 's/__OS__/linux/g' ${ROOT}/${EXEC}-linux-arm-7/manifest.json
+	sed -i 's/__LIB__/libvosk.so/g' ${ROOT}/${EXEC}-linux-arm-7/manifest.json
 	cp LICENSE ${ROOT}/${EXEC}-linux-arm-7
 	export CGO_LDFLAGS_ALLOW="-Wl,-rpath.*" && \
 	export CGO_CFLAGS="-I${ROOT}/${EXEC}-linux-arm-7" && \
@@ -137,6 +142,7 @@ build_linux_arm64:
 	sed -i 's/__VERSION__/${RELEASE_VERSION}/g' ${ROOT}/${EXEC}-linux-arm64/manifest.json
 	sed -i 's/__ARCH__/arm64/g' ${ROOT}/${EXEC}-linux-arm64/manifest.json
 	sed -i 's/__OS__/linux/g' ${ROOT}/${EXEC}-linux-arm64/manifest.json
+	sed -i 's/__LIB__/libvosk.so/g' ${ROOT}/${EXEC}-linux-arm64/manifest.json
 	cp LICENSE ${ROOT}/${EXEC}-linux-arm64
 	export CGO_LDFLAGS_ALLOW="-Wl,-rpath.*" && \
 	export CGO_CFLAGS="-I${ROOT}/${EXEC}-linux-arm64" && \
