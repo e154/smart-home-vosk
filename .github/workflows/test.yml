@@ -62,7 +62,7 @@ jobs:
         id: artifact-upload-step
         with:
           name: linux_x86
-          path: ./server-linux-x86
+          path: ./vosk-linux-x86
 
       - name: Output artifact ID
         run: echo 'Artifact ID is ${{ steps.artifact-upload-step.outputs.artifact-id }}'
@@ -95,7 +95,7 @@ jobs:
         id: artifact-upload-step
         with:
           name: linux_amd64
-          path: ./server-linux-amd64
+          path: ./vosk-linux-amd64
 
       - name: Output artifact ID
         run: echo 'Artifact ID is ${{ steps.artifact-upload-step.outputs.artifact-id }}'
@@ -128,7 +128,7 @@ jobs:
         id: artifact-upload-step
         with:
           name: linux_arm6
-          path: ./server-linux-arm-6
+          path: ./vosk-linux-arm-6
 
       - name: Output artifact ID
         run: echo 'Artifact ID is ${{ steps.artifact-upload-step.outputs.artifact-id }}'
@@ -161,7 +161,7 @@ jobs:
         id: artifact-upload-step
         with:
           name: linux_arm7
-          path: ./server-linux-arm-7
+          path: ./vosk-linux-arm-7
 
       - name: Output artifact ID
         run: echo 'Artifact ID is ${{ steps.artifact-upload-step.outputs.artifact-id }}'
@@ -194,7 +194,7 @@ jobs:
         id: artifact-upload-step
         with:
           name: linux_arm64
-          path: ./server-linux-arm64
+          path: ./vosk-linux-arm64
 
       - name: Output artifact ID
         run: echo 'Artifact ID is ${{ steps.artifact-upload-step.outputs.artifact-id }}'
