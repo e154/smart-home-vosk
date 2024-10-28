@@ -10,7 +10,7 @@
   "actor": false,
   "triggers": true,
   "libs": [
-    "libvosk.dylib"
+    "__LIB__"
   ],
   "assets": [
     "stttest.pcm"
